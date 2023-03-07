@@ -1,43 +1,52 @@
 var apiKey = '66b2909c94017289615b9c300cb3b141'
-var cityInputEl = $('#city-input')
+    // var cityInputEl = $('#city-input')
+var cityInputEl = document.getElementById("city-input");
 var searchBtnEl = $('#search-button')
 var weatherInfoEl = $('#weather-info')
-var cityNameEl = $('city-name')
-var tempEl = $('temp')
-var humidityEl = $('humidity')
-var windSpeedEl = $('wind-speed')
-var forecastEl = $('forcecast')
+var cityNameEl = $('#city-name')
+var tempEl = $('#temp')
+var humidityEl = $('#humidity')
+var windSpeedEl = $('#wind-speed')
+var forecastEl = $('#forcecast')
 
-$(function cityFetch(cityInputEl) {
-       
-    var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=Atlanta&appid=" + apiKey
+function cityFetch(cityInputEl) {
+    console.log("The city should be ", cityInputEl);
+
+    var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInputEl + '&appid=' + apiKey + "&units=imperial";
     fetch(weatherURL)
-        .then(function(response){
+        .then(function(response) {
             console.log(response)
             return response.json();
         })
-        .then(function (data) {
-            submitCity(data)
+        .then(function(data) {
+            console.log(data)
+            // submitCity(data)
+            generateWeather(data)
         })
-
-    console.log('getit')
-    
-})
-
-//function submits the input of the desired city 
-var submitCity = function(){
-    console.log('does this work')
     
     
-    // test funcitonality of code 
-    $('#search-button').submit(function(event){
-        event.preventDefault()
-        var response = cityInputEl.val();
-        cityFetch(response)
-        console.log('submit works too')
-    })
-
-
 }
 
-// make sure it works
+$('#search-button').click(function(event) {
+    event.preventDefault()
+        // var response = cityInputEl.value;
+    var city = cityInputEl.value;
+
+    console.log("The button was clicked");
+    console.log(city);
+    // cityFetch(response)
+    cityFetch(city)
+
+
+    console.log('submit works too')
+})
+
+function generateWeather (data) {
+    //Get the Date 
+    cityNameEl.append(data.name + dayjs().format(" MMMM DD, YYYY"))
+
+    //Parameters
+    tempEl.append("Temp: " + data.main.temp + " F");
+    humidityEl.append("Humidity: " + data.main.humidity + " %");
+    windSpeedEl.append("Wind Speed: " + data.wind.speed + " mph");
+}
