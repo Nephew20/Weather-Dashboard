@@ -45,6 +45,12 @@ function generateWeather (data) {
     //Get the Date 
     cityNameEl.append(data.name + dayjs().format(" MMMM DD, YYYY"))
 
+    //Generate Image
+    weatherIMG = document.createElement('img')
+    weatherIMG.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png')
+    weatherIMG.setAttribute('alt', data.weather.description)
+
+    cityNameEl.append(weatherIMG)
     //Parameters
     tempEl.append("Temp: " + data.main.temp + " F");
     humidityEl.append("Humidity: " + data.main.humidity + " %");
