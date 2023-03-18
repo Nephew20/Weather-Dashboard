@@ -1,7 +1,11 @@
 var apiKey = '66b2909c94017289615b9c300cb3b141'
     // var cityInputEl = $('#city-input')
 var cityInputEl = document.getElementById("city-input");
+// var cityinfoEl = $("#city-info")
+var currentDateEl = $('#current-date')
+var currentPicEl = $('#current-pic')
 var searchBtnEl = $('#search-button')
+var weatherPicEl = $('#weather-pic')
 var weatherInfoEl = $('#weather-info')
 var cityNameEl = $('#city-name')
 var tempEl = $('#temp')
@@ -20,10 +24,11 @@ function cityFetch(cityInputEl) {
         })
         .then(function(data) {
             console.log(data)
-            // submitCity(data)
-            generateWeather(data)
+            
+            generateCurrentWeather(data)
         })
     
+    console.log("This is the weather data: " + weatherURL )
     
 }
 
@@ -41,16 +46,19 @@ $('#search-button').click(function(event) {
     console.log('submit works too')
 })
 
-function generateWeather (data) {
+function generateCurrentWeather (data) {
     //Get the Date 
-    cityNameEl.append(data.name + dayjs().format(" MMMM DD, YYYY"))
+    currentDateEl.append(data.name + dayjs().format(", MMMM DD, YYYY"))
 
     //Generate Image
-    weatherIMG = document.createElement('img')
-    weatherIMG.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png')
-    weatherIMG.setAttribute('alt', data.weather.description)
+    // weatherIMG = document.createElement('img')
+    currentPicEl.attr('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png')
+    currentPicEl.attr('alt', data.weather[0].description)
+    // weatherIMG.setAttribute('class', 'card-img-top')
+    // weatherPicEl.append(weatherIMG)
+    
+    console.log(data.weather[0].description)
 
-    cityNameEl.append(weatherIMG)
     //Parameters
     tempEl.append("Temp: " + data.main.temp + " F");
     humidityEl.append("Humidity: " + data.main.humidity + " %");
