@@ -1,24 +1,10 @@
 var apiKey = '66b2909c94017289615b9c300cb3b141'
-//     // var cityInputEl = $('#city-input')
-// 
-// // var cityinfoEl = $("#city-info")
-// var currentDateEl = $('#current-date')
-// var currentPicEl = $('#current-pic')
-// var searchBtnEl = $('#search-btn')
-// var weatherPicEl = $('#weather-pic')
-// var weatherInfoEl = $('#weather-info')
-// var cityNameEl = $('#city-name')
-// var tempEl = $('#temp')
-// var humidityEl = $('#humidity')
-// var windSpeedEl = $('#wind-speed')
-// var forecastEl = $('#forcecast')
-// var currentCont = document.getElementById("card-container")
-
 var cityInputEl = document.getElementById("city-input");
 var cardCont = document.getElementById("card");
 var searchBtn = document.getElementById("search-btn");
 var cardEl = document.querySelector(".card")
 var cardBody = document.querySelector(".card-body")
+var forecastEl = document.getElementById("forecast")
 
 
 function getCity(cityInputEl) {
@@ -26,20 +12,20 @@ function getCity(cityInputEl) {
 
     var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInputEl + '&appid=' + apiKey + "&units=imperial";
     fetch(weatherURL)
-        .then(function(response) {
+        .then(function (response) {
             console.log(response)
             return response.json();
         })
-        .then(function(data) {
+        .then(function (data) {
             console.log(data)
-            
+
             generateCurrentWeather(data)
 
             generateForecast(data)
         })
-    
-    console.log("This is the weather data: " + weatherURL )
-    
+
+    console.log("This is the weather data: " + weatherURL)
+
 }
 
 function searchCity(event) {
@@ -48,7 +34,7 @@ function searchCity(event) {
 
     console.log("The button was clicked");
     console.log(city);
-    // cityFetch(response)
+
     getCity(city)
 
 
@@ -57,7 +43,7 @@ function searchCity(event) {
 
 searchBtn.addEventListener("click", searchCity)
 
-function generateCurrentWeather (data) {
+function generateCurrentWeather(data) {
     //Get the Date 
     var currentDateEl = document.createElement('h3')
     currentDateEl.textContent = data.name + dayjs().format(", MMMM DD, YYYY")
@@ -73,30 +59,46 @@ function generateCurrentWeather (data) {
 
     console.log(data.weather[0].description)
 
-    //Parameters
-    tempEl.append("Temp: " + data.main.temp + " F");
-    humidityEl.append("Humidity: " + data.main.humidity + " %");
-    windSpeedEl.append("Wind Speed: " + data.wind.speed + " mph");
-    
-    currentCont.append(tempEl, humidityEl, windSpeedEl)
+    //Weather Conditions
+    var temp = document.createElement('p')
+    temp.textContent = "Temp: " + data.main.temp + " F"
+
+    var humidity = document.createElement('p')
+    humidity.textContent = "Humidity: " + data.main.humidity + " %"
+
+    var windSpeed = document.createElement('p')
+    windSpeed.textContent = "Wind Speed: " + data.wind.speed + " mph"
+
+    //Add Elements to the Card
+    cardBody.append(temp, humidity, windSpeed)
+    cardEl.appendChild(cardBody)
 }
 
-function generateForecast(city) {
+function generateForecast(cityInputEl) {
     console.log("Forecast Works")
 
-    var forecastURL = "https://api.openweathermap.org/data/2.5/forecast/daily?q=" + city + "&cnt=6&appid=" + apiKey
-
+    var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + cityInputEl.coord.lat + "&lon=" + cityInputEl.coord.lon + "&cnt=7&appid=" + apiKey + "&units=imperial"
+    console.log("forecast city", cityInputEl)
     fetch(forecastURL)
-        .then(function(response) {
-            
+        .then(function (response) {
+
             if (!response.ok) {
                 console.log('Network Error')
             }
-            response.json()
             console.log(response)
+            return response.json()
+            
         })
-        .then(function(data) {
-            console.log(data)
+        .then(function (data) {
+            for(i=0; i<data.length; i++) {
+                var city = document.createElement('h6')
+                city.textContent = data.city.name
+                
+                console.log(city)
+                forecastEl.appendChild(city)
+            }
+
+            
         })
 
 }
