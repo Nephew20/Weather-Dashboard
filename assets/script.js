@@ -91,20 +91,20 @@ function generateForecast(data) {
         })
         .then(function (data) {
             console.log("forecast", data)
-            console.log(data.list.length)
-
-            for (i = 9; i < data.list.length; i += 8) {
+            
+            
+            for (i = 5; i < data.list.length; i += 8) {
                 //Date
                 var dateEl = document.createElement("h6")
-                dateEl.textContent = data.list[i].dt_txt
+                dateEl.textContent = dayjs(data.list[i].dt_txt).format("MM/DD/YY ddd hh:mm")
 
                 //Temp
                 var temp = document.createElement("h6")
-                temp.textContent = data.list[i].main.temp + " F"
+                temp.textContent ="Temp: " + Math.round(data.list[i].main.temp) + " F"
 
                 //Humidity
                 var humidity = document.createElement("h6")
-                humidity.textContent = data.list[i].main.humidity + " %"
+                humidity.textContent = "Humidity: " + data.list[i].main.humidity + " %"
 
                 //Weather Image
                 var weatherIMG = document.createElement('img')
@@ -114,9 +114,22 @@ function generateForecast(data) {
                 
                 //Wind Speed
                 var windSpeed = document.createElement("h6")
-                windSpeed.textContent = data.list[i].wind.speed + " mph"
+                windSpeed.textContent = "Wind Speed: " + data.list[i].wind.speed + " mph"
 
-                forecastEl.append(dateEl, weatherIMG, temp, windSpeed, humidity)
+                //Create Cards for forecast
+                var card = document.createElement("div")
+                card.setAttribute("class", "card")
+                card.setAttribute("style", "width: 18rem;")
+                card.appendChild(weatherIMG)
+
+                var cardBody = document.createElement("div")
+                cardBody.setAttribute("class", "card-body")
+                cardBody.append(dateEl, temp, windSpeed, humidity)
+                
+                card.appendChild(cardBody)
+
+                forecastEl.append(card)
+                forecastEl.setAttribute("class", "d-flex")
             }
 
 
