@@ -1,10 +1,11 @@
 var apiKey = '66b2909c94017289615b9c300cb3b141'
 var cityInputEl = document.getElementById("city-input");
-var cardCont = document.getElementById("card");
 var searchBtn = document.getElementById("search-btn");
+var currentCardEl = document.getElementById("current-card")
 var cardEl = document.querySelector(".card")
 var cardBody = document.querySelector(".card-body")
 var forecastEl = document.getElementById("forecast")
+var savedSearchesEl = document.getElementById("saved-searches")
 
 
 function getCity(cityInputEl) {
@@ -14,14 +15,25 @@ function getCity(cityInputEl) {
     fetch(weatherURL)
         .then(function (response) {
             console.log(response)
+
+            if (!response.ok) (
+                alert("Please select a valid city")
+            )
             return response.json();
+
         })
         .then(function (data) {
             console.log("city", data)
 
+            currentCardEl.innerHTML = ''
+            cardEl.innerHTML = ''
+            cardBody.innerHTML = ''
+            forecastEl.innerHTML = ''
             generateCurrentWeather(data)
 
             generateForecast(data)
+
+            savedSearches(data)
         })
 
     console.log("This is the weather data: " + weatherURL)
@@ -33,7 +45,14 @@ function searchCity(event) {
     var city = cityInputEl.value;
 
     console.log("The button was clicked");
-    console.log(city);
+    
+    if(city === "") {
+        alert("Please enter a valid city")
+        return
+    } else if (city === "undefined") {
+        alert("Check your spelling for the city")
+        return
+    }
 
     getCity(city)
 
@@ -72,6 +91,7 @@ function generateCurrentWeather(data) {
     //Add Elements to the Card
     cardBody.append(temp, humidity, windSpeed)
     cardEl.appendChild(cardBody)
+    currentCardEl.appendChild(cardEl)
 }
 
 function generateForecast(data) {
@@ -136,3 +156,15 @@ function generateForecast(data) {
         })
 
 }
+
+function savedSearches(data) {
+    var savedSearchTitile = document.createElement("h2")
+    savedSearchTitile.textContent = "Saved Searches"
+
+    var searchCityBtn = document.createElement("button")
+    searchCityBtn = document.setAttribute("class", "btn-lg")
+
+    savedSearchesEl.append(savedSearchTitile)
+
+}
+
