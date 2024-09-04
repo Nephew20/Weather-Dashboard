@@ -9,7 +9,6 @@ var savedSearchesEl = document.getElementById("saved-searches")
 
 
 function getCity(cityInputEl) {
-    console.log("The city should be ", cityInputEl);
 
     var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInputEl + '&appid=' + apiKey + "&units=imperial";
     fetch(weatherURL)
@@ -33,7 +32,7 @@ function getCity(cityInputEl) {
 
             generateForecast(data)
 
-            savedSearches(data)
+            savedSearches(data.name)
         })
 
     console.log("This is the weather data: " + weatherURL)
@@ -44,9 +43,7 @@ function searchCity(event) {
     event.preventDefault()
     var city = cityInputEl.value;
 
-    console.log("The button was clicked");
-    
-    if(city === "") {
+    if (city === "") {
         alert("Please enter a valid city")
         return
     } else if (city === "undefined") {
@@ -56,8 +53,6 @@ function searchCity(event) {
 
     getCity(city)
 
-
-    console.log('submit works too')
 }
 
 searchBtn.addEventListener("click", searchCity)
@@ -95,7 +90,6 @@ function generateCurrentWeather(data) {
 }
 
 function generateForecast(data) {
-    console.log("Forecast Works")
 
     var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=" + apiKey + "&units=imperial"
     console.log("forecast city", cityInputEl)
@@ -111,8 +105,8 @@ function generateForecast(data) {
         })
         .then(function (data) {
             console.log("forecast", data)
-            
-            
+
+
             for (i = 5; i < data.list.length; i += 8) {
                 //Date
                 var dateEl = document.createElement("h6")
@@ -120,7 +114,7 @@ function generateForecast(data) {
 
                 //Temp
                 var temp = document.createElement("h6")
-                temp.textContent ="Temp: " + Math.round(data.list[i].main.temp) + " F"
+                temp.textContent = "Temp: " + Math.round(data.list[i].main.temp) + " F"
 
                 //Humidity
                 var humidity = document.createElement("h6")
@@ -131,7 +125,7 @@ function generateForecast(data) {
                 weatherIMG.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.list[1].weather[0].icon + '@2x.png')
                 weatherIMG.setAttribute('alt', data.list[i].weather[0].description)
                 weatherIMG.setAttribute('class', 'card-img-top')
-                
+
                 //Wind Speed
                 var windSpeed = document.createElement("h6")
                 windSpeed.textContent = "Wind Speed: " + data.list[i].wind.speed + " mph"
@@ -145,7 +139,7 @@ function generateForecast(data) {
                 var cardBody = document.createElement("div")
                 cardBody.setAttribute("class", "card-body")
                 cardBody.append(dateEl, temp, windSpeed, humidity)
-                
+
                 card.appendChild(cardBody)
 
                 forecastEl.append(card)
@@ -157,14 +151,33 @@ function generateForecast(data) {
 
 }
 
-function savedSearches(data) {
-    var savedSearchTitile = document.createElement("h2")
-    savedSearchTitile.textContent = "Saved Searches"
-
-    var searchCityBtn = document.createElement("button")
-    searchCityBtn = document.setAttribute("class", "btn-lg")
-
-    savedSearchesEl.append(savedSearchTitile)
-
+function savedSearches(city) {
+    var savedCities = JSON.parse(localStorage.getItem("savedCities")) || [];
+    if (!savedCities.includes(city)) {
+        savedCities.push(city);
+        localStorage.setItem("savedCities", JSON.stringify(savedCities));
+        savedSearchButtons(city);
+    }
 }
 
+function loadSavedSearches() {
+    var savedCities = JSON.parse(localStorage.getItem("savedCities")) || [];
+    savedCities.forEach(function (city) {
+        savedSearchButtons(city);
+    });
+}
+
+function savedSearchButtons(city) {
+    var searchCityBtn = document.createElement("button");
+    searchCityBtn.setAttribute("class", "btn-lg");
+
+    searchCityBtn.textContent = city;
+
+    searchCityBtn.addEventListener("click", function () {
+        getCity(city);
+    });
+
+    savedSearchesEl.appendChild(searchCityBtn);
+}
+
+loadSavedSearches()
