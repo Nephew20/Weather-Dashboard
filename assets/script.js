@@ -13,21 +13,22 @@ function getCity(cityInputEl) {
     var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInputEl + '&appid=' + apiKey + "&units=imperial";
     fetch(weatherURL)
         .then(function (response) {
-            console.log(response)
 
-            if (!response.ok) (
-                alert("Please select a valid city")
-            )
+            if (!response.ok) {
+                alert("City not found. Check your spelling and try again.")
+                throw new Error("City not found")
+            }
             return response.json();
 
         })
         .then(function (data) {
-            console.log("city", data)
 
+            //Empty the field prior to each search for a city
             currentCardEl.innerHTML = ''
             cardEl.innerHTML = ''
             cardBody.innerHTML = ''
             forecastEl.innerHTML = ''
+
             generateCurrentWeather(data)
 
             generateForecast(data)
@@ -45,9 +46,6 @@ function searchCity(event) {
 
     if (city === "") {
         alert("Please enter a valid city")
-        return
-    } else if (city === "undefined") {
-        alert("Check your spelling for the city")
         return
     }
 
@@ -71,8 +69,6 @@ function generateCurrentWeather(data) {
 
     cardEl.appendChild(weatherIMG)
 
-    console.log(data.weather[0].description)
-
     //Weather Conditions
     var temp = document.createElement('p')
     temp.textContent = "Temp: " + data.main.temp + " F"
@@ -89,28 +85,21 @@ function generateCurrentWeather(data) {
     currentCardEl.appendChild(cardEl)
 }
 
+//Generate the forecast
 function generateForecast(data) {
 
     var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=" + apiKey + "&units=imperial"
-    console.log("forecast city", cityInputEl)
+
     fetch(forecastURL)
         .then(function (response) {
-
-            if (!response.ok) {
-                console.log('Network Error')
-            }
-            console.log(response)
             return response.json()
-
         })
         .then(function (data) {
-            console.log("forecast", data)
-
 
             for (i = 5; i < data.list.length; i += 8) {
                 //Date
                 var dateEl = document.createElement("h6")
-                dateEl.textContent = dayjs(data.list[i].dt_txt).format("MM/DD/YY ddd hh:mm")
+                dateEl.textContent = dayjs(data.list[i].dt_txt).format("ddd MM/DD/YY ")
 
                 //Temp
                 var temp = document.createElement("h6")
@@ -148,18 +137,23 @@ function generateForecast(data) {
 
 
         })
-
 }
 
+//Returning an array of cities from local storage. 
 function savedSearches(city) {
+
+    //Returns an empty array 
     var savedCities = JSON.parse(localStorage.getItem("savedCities")) || [];
+
+    //If the city is not in the array, add the city and send it to local storage 
     if (!savedCities.includes(city)) {
-        savedCities.push(city);
+        savedCities.push(city)
         localStorage.setItem("savedCities", JSON.stringify(savedCities));
         savedSearchButtons(city);
     }
 }
 
+//Helper function to display the searches from local storage
 function loadSavedSearches() {
     var savedCities = JSON.parse(localStorage.getItem("savedCities")) || [];
     savedCities.forEach(function (city) {
@@ -167,6 +161,7 @@ function loadSavedSearches() {
     });
 }
 
+// Creates the city buttons 
 function savedSearchButtons(city) {
     var searchCityBtn = document.createElement("button");
     searchCityBtn.setAttribute("class", "btn-lg");
@@ -180,4 +175,5 @@ function savedSearchButtons(city) {
     savedSearchesEl.appendChild(searchCityBtn);
 }
 
+//Load the page with data from your local storage
 loadSavedSearches()
