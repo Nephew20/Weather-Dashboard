@@ -15,7 +15,11 @@ Type the city that you want to search for weather data about and submit it to th
 Link to website: https://nephew20.github.io/Weather-Dashboard/
 
 Screen Capture of App Usage<br/>
-https://github.com/user-attachments/assets/0fb756eb-8af8-4df4-8428-a734fcbd90b5
+
+
+
+https://github.com/user-attachments/assets/3cab3b05-5236-4fc7-b9ac-a61c7593e12b
+
 
 
 ## Credits
