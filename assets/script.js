@@ -26,9 +26,9 @@ function getCity(cityInputEl) {
         .then(function (data) {
 
             //Display the section title and card once a user searches for city
-            cardTitle.style.display = "block"
-            cardEl.style.display = "block"
-            forecastTitle.style.display = "block"
+            cardTitle.style.display = "flex"
+            cardEl.style.display = "flex"
+            forecastTitle.style.display = "flex"
             
             //Empty the field prior to each search for a city
             currentCardEl.innerHTML = ''
@@ -71,7 +71,7 @@ function generateCurrentWeather(data) {
     var weatherIMG = document.createElement('img')
     weatherIMG.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png')
     weatherIMG.setAttribute('alt', data.weather[0].description)
-    weatherIMG.setAttribute('class', 'card-img-top')
+    weatherIMG.setAttribute('style', 'width:50%')
 
     //Add Date and Weather Icon
     cardEl.append(currentDateEl, weatherIMG)
@@ -102,8 +102,8 @@ function generateForecast(data) {
         })
         .then(function (data) {
 
-            // Gathers data for noon each day
-            for (i = 1; i < data.list.length; i += 8) {
+            // Gathers data for 2pm each day
+            for (i = 7; i < data.list.length; i += 8) {
                 //Date
                 var dateEl = document.createElement("h6")
                 dateEl.textContent = dayjs(data.list[i].dt_txt).format("ddd MM/DD/YY")
@@ -120,7 +120,7 @@ function generateForecast(data) {
                 var weatherIMG = document.createElement('img')
                 weatherIMG.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.list[1].weather[0].icon + '@2x.png')
                 weatherIMG.setAttribute('alt', data.list[i].weather[0].description)
-                weatherIMG.setAttribute('class', 'card-img-top')
+                weatherIMG.setAttribute('style', 'width:100%')
 
                 //Wind Speed
                 var windSpeed = document.createElement("h6")
@@ -128,8 +128,8 @@ function generateForecast(data) {
 
                 //Create Cards for forecast
                 var card = document.createElement("div")
-                card.setAttribute("class", "card")
-                card.setAttribute("style", "width: 18rem;")
+                card.setAttribute("id", "forecast-card")
+                card.setAttribute("style", "flex-column justify-content-center align-items-center")
                 card.appendChild(weatherIMG)
 
                 var cardBody = document.createElement("div")

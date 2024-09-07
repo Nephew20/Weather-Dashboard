@@ -3,10 +3,37 @@
 }
 
 .card {
-    width: 18rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    width: 18rem;
 }
 
 h2 {
     display: none;
+}
+
+#saved-searches {
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    max-width: 200px;
+}
+
+#saved-searches button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.main-content {
+    position: relative;
+    left: 300px;
+}
+
+#forecast-card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 12rem;
+    margin-right: 10px;
 }

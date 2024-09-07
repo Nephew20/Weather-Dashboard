@@ -22,23 +22,31 @@
         <button type="submit" class="btn-sm" id="search-btn">Search Locaiton</button>
     </form>
 
-    <main>
-        <h2 id="card-title">Current Weather</h3>
-        <div id="current-card" class="card" style="display: none;">
-
-            <div class="card-body"></div>
-        </div>
-
-
-        <h2 id="forecast-title">5-Day Forecast</h3>
-        <div id="forecast"></div>
+    <main class="container-fluid">
+        <!-- Recent Search Section -->
         
-        <aside>
-            <div id="saved-searches">
-                <h3>Recent Searches</h3>
-            </div>
-        </aside>
+            <aside>
+                <div id="saved-searches">
+                    <h3>Recent Searches</h3>
+                </div>
+            </aside>
 
+            <!-- Weather Card and Forecast -->
+            <div class="main-content">
+
+                <div class="card-cont">
+                    <h2 id="card-title">Current Weather</h2>
+                    <div id="current-card" class="card" style="display: none;">
+                        <div class="card-body"></div>
+                    </div>
+                </div>
+                
+                <div class="forecast-cont">
+                    <h2 id="forecast-title">5-Day Forecast</h2>
+                    <div id="forecast"></div>
+                </div>
+            </div>
+        
     </main>
 
     <script src="./assets/script.js"></script>
