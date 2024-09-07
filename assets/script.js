@@ -2,6 +2,8 @@ var apiKey = '66b2909c94017289615b9c300cb3b141'
 var cityInputEl = document.getElementById("city-input");
 var searchBtn = document.getElementById("search-btn");
 var currentCardEl = document.getElementById("current-card")
+var cardTitle = document.getElementById("card-title")
+var forecastTitle = document.getElementById("forecast-title")
 var cardEl = document.querySelector(".card")
 var cardBody = document.querySelector(".card-body")
 var forecastEl = document.getElementById("forecast")
@@ -23,6 +25,11 @@ function getCity(cityInputEl) {
         })
         .then(function (data) {
 
+            //Display the section title and card once a user searches for city
+            cardTitle.style.display = "block"
+            cardEl.style.display = "block"
+            forecastTitle.style.display = "block"
+            
             //Empty the field prior to each search for a city
             currentCardEl.innerHTML = ''
             cardEl.innerHTML = ''
@@ -59,7 +66,6 @@ function generateCurrentWeather(data) {
     //Get the Date 
     var currentDateEl = document.createElement('h3')
     currentDateEl.textContent = data.name + dayjs().format(", MMMM DD, YYYY")
-    cardEl.appendChild(currentDateEl)
 
     //Generate Image
     var weatherIMG = document.createElement('img')
@@ -67,7 +73,8 @@ function generateCurrentWeather(data) {
     weatherIMG.setAttribute('alt', data.weather[0].description)
     weatherIMG.setAttribute('class', 'card-img-top')
 
-    cardEl.appendChild(weatherIMG)
+    //Add Date and Weather Icon
+    cardEl.append(currentDateEl, weatherIMG)
 
     //Weather Conditions
     var temp = document.createElement('p')
@@ -82,7 +89,6 @@ function generateCurrentWeather(data) {
     //Add Elements to the Card
     cardBody.append(temp, humidity, windSpeed)
     cardEl.appendChild(cardBody)
-    currentCardEl.appendChild(cardEl)
 }
 
 //Generate the forecast
@@ -96,10 +102,11 @@ function generateForecast(data) {
         })
         .then(function (data) {
 
-            for (i = 5; i < data.list.length; i += 8) {
+            // Gathers data for noon each day
+            for (i = 1; i < data.list.length; i += 8) {
                 //Date
                 var dateEl = document.createElement("h6")
-                dateEl.textContent = dayjs(data.list[i].dt_txt).format("ddd MM/DD/YY ")
+                dateEl.textContent = dayjs(data.list[i].dt_txt).format("ddd MM/DD/YY")
 
                 //Temp
                 var temp = document.createElement("h6")
